@@ -2,6 +2,5 @@ Flask
 flask-restful
 flask-cors
 pymongo
-bson
 flask-swagger-ui
 Werkzeug
