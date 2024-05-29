@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, redirect
+from flask import Flask, request, jsonify, redirect
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -71,7 +71,103 @@ def index():
 
 @app.route('/swagger.json')
 def swagger_json():
-    return send_from_directory(os.path.join(app.root_path, 'templates'), 'swagger.json')
+    swagger_config = {
+        "swagger": "2.0",
+        "info": {
+            "title": "Student Management API",
+            "description": "API documentation for managing students",
+            "version": "1.0.0"
+        },
+        "host": request.host,  # Dynamically set the host
+        "basePath": "/",
+        "schemes": ["http"],
+        "paths": {
+            "/students": {
+                "get": {
+                    "summary": "Retrieve all students",
+                    "responses": {
+                        "200": {
+                            "description": "Students retrieved"
+                        }
+                    }
+                }
+            },
+            "/student/{student_id}": {
+                "get": {
+                    "summary": "Retrieve a specific student by ID",
+                    "parameters": [
+                        {
+                            "name": "student_id",
+                            "in": "path",
+                            "required": True,
+                            "type": "string"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Student retrieved"
+                        },
+                        "404": {
+                            "description": "Student not found"
+                        }
+                    }
+                },
+                "put": {
+                    "summary": "Update an existing student",
+                    "parameters": [
+                        {
+                            "name": "student_id",
+                            "in": "path",
+                            "required": True,
+                            "type": "string"
+                        },
+                        {
+                            "name": "body",
+                            "in": "body",
+                            "required": True,
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {"type": "string"},
+                                    "age": {"type": "integer"},
+                                    "course": {"type": "string"},
+                                    "school": {"type": "string"}
+                                }
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Student updated"
+                        },
+                        "404": {
+                            "description": "Student not found"
+                        }
+                    }
+                },
+                "delete": {
+                    "summary": "Delete a student",
+                    "parameters": [
+                        {
+                            "name": "student_id",
+                            "in": "path",
+                            "required": True,
+                            "type": "string"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Student deleted"
+                        },
+                        "404": {
+                            "description": "Student not found"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return jsonify(swagger_config)
 
 if __name__ == '__main__':
     app.run(debug=True)
