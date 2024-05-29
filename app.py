@@ -5,14 +5,10 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from flask_swagger_ui import get_swaggerui_blueprint
 import os
-import urllib.parse
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}})  # Enable CORS for all routes and allow any origin
 api = Api(app)
-
-# Escape username and password
-password = urllib.parse.quote_plus("Uptc@24")
 
 # MongoDB Connection
 client = MongoClient('mongodb+srv://proyecto:papas123@cluster0.etmm0wb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
@@ -20,18 +16,12 @@ db = client.get_database('mydatabase')
 collection = db.get_collection('students')
 
 class Student(Resource):
-    def get(self, student_id=None):
-        if student_id:
-            student = collection.find_one({"_id": ObjectId(student_id)})
-            if student:
-                student['_id'] = str(student['_id'])
-                return jsonify(student)
-            return {'message': 'Student not found'}, 404
-        else:
-            students = list(collection.find())
-            for student in students:
-                student['_id'] = str(student['_id'])
-            return jsonify(students)
+    def get(self, student_id):
+        student = collection.find_one({"_id": ObjectId(student_id)})
+        if student:
+            student['_id'] = str(student['_id'])
+            return jsonify(student)
+        return {'message': 'Student not found'}, 404
 
     def post(self):
         data = request.get_json()
@@ -53,13 +43,12 @@ class Student(Resource):
 
 class Students(Resource):
     def get(self):
-        cursor = collection.find()
-        students = list(cursor)
+        students = list(collection.find())
         for student in students:
             student['_id'] = str(student['_id'])
         return jsonify(students)
 
-api.add_resource(Student, '/student', '/student/<string:student_id>')
+api.add_resource(Student, '/student/<string:student_id>')
 api.add_resource(Students, '/students')
 
 # Swagger UI setup

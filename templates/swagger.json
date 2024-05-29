@@ -21,60 +21,26 @@
         }
       }
     },
-    "/student": {
+    "/student/{student_id}": {
       "get": {
-        "summary": "Retrieve all students or a specific student by ID",
+        "summary": "Retrieve a specific student by ID",
         "parameters": [
           {
             "name": "student_id",
-            "in": "query",
+            "in": "path",
             "required": true,
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Students retrieved"
+            "description": "Student retrieved"
           },
           "404": {
             "description": "Student not found"
           }
         }
       },
-      "post": {
-        "summary": "Create a new student",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "age": {
-                  "type": "integer"
-                },
-                "course": {
-                  "type": "string"
-                },
-                "school": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Student created"
-          }
-        }
-      }
-    },
-    "/student/{student_id}": {
       "put": {
         "summary": "Update an existing student",
         "parameters": [
