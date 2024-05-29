@@ -15,7 +15,7 @@ api = Api(app)
 password = urllib.parse.quote_plus("Uptc@24")
 
 # MongoDB Connection
-client = MongoClient(f"mongodb+srv://proyecto:papas123@cluster0.etmm0wb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = MongoClient('mongodb+srv://proyecto:papas123@cluster0.etmm0wb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 db = client.get_database('mydatabase')
 collection = db.get_collection('students')
 
