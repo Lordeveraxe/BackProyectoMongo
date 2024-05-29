@@ -1,5 +1,7 @@
-Flask==2.0.2
-flask_restful==0.3.9
-flask_cors==3.0.10
-pymongo==3.12.1
-flask_swagger_ui==3.36.0
+Flask
+flask-restful
+flask-cors
+pymongo
+bson
+flask-swagger-ui
+Werkzeug
