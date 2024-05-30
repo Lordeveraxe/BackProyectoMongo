@@ -29,7 +29,10 @@ class Student(Resource):
         return {'message': 'Student created', 'id': str(result.inserted_id)}, 201
 
     def put(self, student_id):
-        data = request.get_json()
+        data = request.get_json()        
+        # Remove _id from the data to avoid attempting to update the immutable field
+        if '_id' in data:
+            del data['_id']
         result = collection.update_one({"_id": ObjectId(student_id)}, {"$set": data})
         if result.matched_count:
             return {'message': 'Student updated'}
@@ -88,6 +91,34 @@ def swagger_json():
                     "responses": {
                         "200": {
                             "description": "Students retrieved"
+                        }
+                    }
+                },
+                "post": {
+                    "summary": "Create a new student",
+                    "parameters": [
+                        {
+                            "name": "body",
+                            "in": "body",
+                            "required": True,
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {"type": "string"},
+                                    "age": {"type": "integer"},
+                                    "course": {"type": "string"},
+                                    "school": {"type": "string"}
+                                },
+                                "required": ["name", "age", "course", "school"]
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "201": {
+                            "description": "Student created"
+                        },
+                        "400": {
+                            "description": "Invalid input"
                         }
                     }
                 }
